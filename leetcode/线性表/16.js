@@ -5,30 +5,26 @@
  */
 var threeSumClosest = function(nums, target) {
   nums.sort((a, b) => a - b)
-  let left = 0, right = nums.length - 1
-  while (left < right) {
-    const mid = Math.floor((left + right) / 2)
-    if (nums[mid] * 3 < target) {
-      left = mid + 1
-    } else {
-      right = mid
+  let diff = Number.MAX_VALUE
+  let sum
+  for(let i = 0; i < nums.length - 2; i++) {
+    let start = i + 1;
+    let end = nums.length -1 
+    while(start < end) {
+      const thisSum = nums[i] + nums[start] + nums[end]
+      const thisDiff = target - thisSum
+      if(Math.abs(thisDiff) < diff) {
+        diff = Math.abs(thisDiff)
+        sum = thisSum
+      }
+      if(thisDiff < 0) {
+        end--
+      } else {
+        start++
+      }
     }
   }
-  
-  if (right === 0) {
-    return nums[0] + nums[1] + nums[2]
-  } else if(right === nums.length - 1) {
-    return nums[right - 2] + nums[right - 1] + nums[right]
-  } else if(right === 2 || right === nums.length -2 ){
-    // const sum2 = nums[right - 2] + nums[right - 1] + nums[right]
-    return nums[right - 1] + nums[right] + nums[right + 1]
-  } else {
-    const sum1 = nums[right - 2] + nums[right - 1] + nums[right]
-    const sum2 = nums[right - 1] + nums[right] + nums[right + 1]
-    const sum3 = nums[right] + nums[right + 1] + nums[right+2]
-    const mid = Math.abs(sum1 - target) < Math.abs(sum2 - target) ? sum1 : sum2
-    return Math.abs(mid - target) < Math.abs(sum3 - target) ? mid : sum3
-  }
+  return sum
 };
 
 // console.log(threeSumClosest([-1,2,1,-4], 1))
