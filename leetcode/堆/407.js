@@ -5,30 +5,30 @@
 var trapRainWater = function(heightMap) {
     let water = 0
     const fn = ([i, j]) => heightMap[i][j]
-    const m = heightMap.length, n = heightMap[1].length
+    const m = heightMap.length, n = heightMap[0].length
     const heap = new MinHeap(fn)
-    const visited = new Set([`0,0`, `0,${n - 1}`, `${m - 1},0`, `${m - 1},${n - 1}`])
+    const visited = new Array(m).fill(0).map(item => new Array(n).fill(0))
     const direction = [[-1, 0], [1, 0], [0, 1], [0, -1]]
-    for(let i = 1; i< m - 1; i++) {
+    for(let i = 0; i< m; i++) {
         heap.insert([i, 0])
-        visited.add(`${i},0`)
+        visited[i][0] = 1
         heap.insert([i, n - 1])
-        visited.add(`${i},${n - 1}`)
+        visited[i][n - 1] = 1
     }
     for(let j = 1; j < n - 1; j++) {
         heap.insert([0, j])
-        visited.add(`0,${j}`)
+        visited[0][j] = 1
         heap.insert([m - 1, j])
-        visited.add(`${m - 1},${j}`)
+        visited[m - 1][j] = 1
     }
     while(heap.length) {
         const [i, j] = heap.delete()
         direction.forEach(([nx, ny]) => {
             const x = i + nx, y = j + ny
-            if(x < 0 || y < 0 || x >= m || y >= n || visited.has(`${x},${y}`)) {
+            if(x < 0 || y < 0 || x >= m || y >= n || visited[x][y] === 1) {
                 return
             }
-            visited.add(`${x},${y}`)
+            visited[x][y] = 1
             const diff = heightMap[i][j] - heightMap[x][y]
             if(diff > 0) {
                 water += diff
@@ -97,6 +97,6 @@ class MinHeap extends Array {
 }
 
 
-// console.log(trapRainWater([[1,4,3,1,3,2],[3,2,1,3,2,4],[2,3,3,2,3,1]]))
-// console.log(trapRainWater([[3,3,3,3,3],[3,2,2,2,3],[3,2,1,2,3],[3,2,2,2,3],[3,3,3,3,3]]))
+console.log(trapRainWater([[1,4,3,1,3,2],[3,2,1,3,2,4],[2,3,3,2,3,1]]))
+console.log(trapRainWater([[3,3,3,3,3],[3,2,2,2,3],[3,2,1,2,3],[3,2,2,2,3],[3,3,3,3,3]]))
 console.log(trapRainWater([[12,13,1,12],[13,4,13,12],[13,8,10,12],[12,13,12,12],[13,13,13,13]]))
