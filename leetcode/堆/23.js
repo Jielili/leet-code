@@ -48,4 +48,5 @@ var merge = function (list1, list2) {
     return res.next
 }
 
-console.log(mergeKLists([{val: 2, next: null}, null, {val: -1, next: null}]))
+console.log(mergeKLists([{ val: 2, next: null }, null, { val: -1, next: null }]))
+
