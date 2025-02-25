@@ -49,3 +49,4 @@ var merge = function (list1, list2) {
 }
 
 console.log(mergeKLists([{ val: 2, next: null }, null, { val: -1, next: null }]))
+
