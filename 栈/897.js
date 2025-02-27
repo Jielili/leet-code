@@ -11,26 +11,19 @@
  * @return {TreeNode}
  */
 var increasingBST = function(root) {
-    const stack = [root]
+    const stack = []
     const res = new TreeNode()
-    let p = res
-    while (stack.length) {
-        let cur_node = stack[stack.length - 1]
-        while (cur_node.left) {
-            stack.push(cur_node.left)
+    let p = res, cur_node = root
+    while (cur_node || stack.length) {
+        while (cur_node) {
+            stack.push(cur_node)
             cur_node = cur_node.left
         }
-        while (cur_node) {
-            stack.pop()
-            p.right = cur_node
-            p = p.right
-            cur_node.left = null
-            if (cur_node.right) {
-                stack.push(cur_node.right)
-                break;
-            }
-            cur_node = stack[stack.length - 1]
-        }
+        cur_node = stack.pop()
+        p.right = cur_node
+        p = p.right
+        cur_node.left = null
+        cur_node = cur_node.right
     }
     return res.right
 };
