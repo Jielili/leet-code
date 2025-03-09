@@ -3,20 +3,16 @@
  * @return {number}
  */
 var jump = function(nums) {
-    if(nums.length <= 1) return 0
-    let maxNumIndex = 0, end = 0, step = 0
-    for (let i = 0;i<nums.length;i++) {
-        maxNumIndex = Math.max(maxNumIndex, nums[i] + i)
-        if (maxNumIndex >= nums.length - 1) return step+1
-        if (i === end) {
-            step++
-            end = maxNumIndex
+    const len = nums.length
+    let steps = 0, left = 0, right = 0
+    while(right < len - 1) {
+        let max_right = 0
+        for(let i = left; i <=right; i++ ) {
+            max_right = Math.max(max_right, nums[i] + i)
         }
+        steps++
+        left = right + 1
+        right = max_right
     }
+    return steps
 };
-
-console.log(jump([2,3,1,1,4]))
-console.log(jump([2,3,0,1,4]))
-console.log(jump([0]))
-console.log(jump([7,0,9,6,9,6,1,7,9,0,1,2,9,0,3]))
-
