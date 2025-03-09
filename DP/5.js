@@ -3,28 +3,29 @@
  * @return {string}
  */
 var longestPalindrome = function(s) {
-    const s_len = s.length
-    const dp = new Array(s_len).fill(0).map(item => new Array(s_len).fill(false))
-    for (let i = 0; i < s_len; i++) dp[i][i] = true;
-    let start = 0, max_len = 1
-    for(let len = 2; len<=s_len; len++) {
-        for(let i = 0; i<s_len-len+1; i++) {
-            const j = i + len - 1
+    let left = 0, right = 0
+    const len = s.length
+    for(let m = 0; m< len; m++) {
+        for(let i = m - 1, j = m + 1; i >= 0 && j < len; i--, j++) {
             if(s[i] === s[j]) {
-                if(len ===2) {
-                    dp[i][j] = true
-                } else {
-                    dp[i][j] = dp[i+1][j-1]
+                if(j - i > right - left) {
+                    left = i
+                    right = j
                 }
-                if(dp[i][j] && max_len < len) {
-                    start = i
-                    max_len = len
+            } else {
+                break
+            }
+        }
+        for(let i = m - 1, j = m; i >= 0 && j < len; i--, j++) {
+            if(s[i] === s[j]) {
+                if(j - i > right - left) {
+                    left = i
+                    right = j
                 }
+            } else {
+                break
             }
         }
     }
-    return s.slice(start, start + max_len)
+    return s.substring(left, right + 1)
 };
-
-console.log(longestPalindrome("babad"))
-console.log(longestPalindrome("cbbd"))
