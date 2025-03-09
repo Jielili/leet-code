@@ -3,22 +3,17 @@
  * @return {string[]}
  */
 var generateParenthesis = function(n) {
-    const res = []
-    function DFS(path, left, right) {
-        if(left === n && right === n) {
-            res.push(path)
+    const dp = [['']]
+    for(let i = 0; i< n; i++) {
+        const arr = []
+        for(let j = i; j >= 0; j--) {
+            dp[j].forEach(m => {
+                dp[i-j].forEach(n => {
+                    arr.push(`(${m})${n}`)
+                })
+            })
         }
-
-        if(left < n) {
-            DFS(path+'(', left + 1, right)
-        }
-        if(right < left) {
-            DFS(path+')', left, right + 1)
-        }
+        dp.push(arr)
     }
-    DFS('', 0, 0)
-    return res
+    return dp[n-1]
 };
-
-console.log(generateParenthesis(3))
-console.log(generateParenthesis(1))
