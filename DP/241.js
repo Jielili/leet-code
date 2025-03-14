@@ -2,58 +2,60 @@
  * @param {string} expression
  * @return {number[]}
  */
-var diffWaysToCompute = function(expression) {
-    return dp(expression, 0, expression.length - 1)
+var diffWaysToCompute = function (expression) {
+    let cur_num = 0
+    const nums = []
+    const operators = []
+    for (let v of expression) {
+        if (v === '+' || v === '-' || v === '*') {
+            operators.push(v)
+            nums.push(cur_num)
+            cur_num = 0
+        } else {
+            cur_num = cur_num * 10 + Number(v)
+        }
+    }
+    nums.push(cur_num)
+
+    const memo = new Array(nums.length).fill(0).map(() => new Array(nums.length).fill(undefined))
+    return dp(nums, operators, 0, nums.length - 1, memo)
 };
 
 
 // the calculate result of expression from i to j
-var dp = function(expression, i) {
+var dp = function (nums, operators, i, j, memo) {
 
-    console.log('i', i)
-
-    if(i >= expression.length) {
-        return []
+    if (memo[i][j] !== undefined) {
+        return memo[i][j]
     }
 
-    // Only the number is left
-    if(expression.length - 1 - i <= 1) {
-        return [Number(expression.substring(i))]
+    if (j === i) {
+        memo[i][j] = [nums[i]]
+        return memo[i][j]
     }
-
-    const first_info = getTheNumber(expression, i)
-    const first = first_info.res
-    const second_info = getTheNumber(expression, first_info.next + 1)
-    const second = second_info.res
-
-    console.log(first, second)
-    console.log(first_info, second_info)
+    
+    // if only j and i are left
+    if (j - i === 1) {
+        memo[i][j] = [calculate(nums[i], nums[j], operators[i])]
+        return memo[i][j]
+    }
 
     const res = []
-    // if we operate first num with second num
-    const last_1 = dp(expression, second_info.next + 1)
-    const operate_res = calculate(first, second, expression[first_info.next])
-    last_1.map(item => calculate(item, operate_res, expression[second_info.next]))
-    res.push(...last_1)
 
-    // else
-    const last_2 = dp(expression, first_info.next + 1)
-    last_2.map(item => calculate(item, first, expression[first_info.next]))
-    res.push(...last_2)
+    // if more than three are left
+    for (let k = i; k < j; k++) {
+        const left = dp(nums, operators, i, k, memo)
+        const right = dp(nums, operators, k + 1, j, memo)
 
+        for (let l of left) {
+            for (let r of right) {
+                res.push(calculate(l, r, operators[k]))
+            }
+        }
+    }
+
+    memo[i][j] = res
     return res
-}
-
-var getTheNumber = function(expression, i) {
-    let res = 0; 
-    while(expression[i] !== '+' && expression[i] !== '-' && expression[i] !== '*' && i < expression.length) {
-        res = (res * 10) + Number(expression[i])
-        i++
-    }
-    return {
-        res, 
-        next: i
-    }
 }
 
 
@@ -67,3 +69,6 @@ var calculate = function(a, b, o) {
         return Number(a) * Number(b)
     }
 }
+
+
+console.log(diffWaysToCompute("2*3-4*5"))
