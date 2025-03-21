@@ -8,13 +8,13 @@ var canPartition = function(nums) {
         return false
     }
     const target = sum/2
-    const dp = new Array(nums.length + 1).fill(0).map(() => new Array(target + 1).fill(false))
-    dp[0][0] = true
-    for (let i = 1; i <= nums.length; i++) {
-        dp[i][0] = dp[i - 1][0]
-        for (let j = 1; j <= target; j++) {
-            dp[i][j] = dp[i - 1][j] || dp[i - 1][j - nums[i - 1]]
+    const dp = new Array(target + 1).fill(false)
+    dp[0] = true
+    for (let i = 0; i < nums.length; i++) {
+        for (let j = target; j >= nums[i]; j--) {
+            dp[j] = dp[j] || dp[j - nums[i]]
         }
+        if(dp[target]) return true
     }
-    return dp[nums.length][target]
+    return false
 };
