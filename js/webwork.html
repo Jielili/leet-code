@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>SuperCharged</title>
+    <style type="text/css">
+        #input {
+            width: 0px;
+            height: 0px;
+            overflow: hidden;
+        }
+        #input + label {
+            /* display: inline-block; */
+            background-color: #777;
+            font-family: sans-serif;
+            padding: 5px;
+            font-size: 2em;
+            color: #f3f3f3;
+        }
+        #input:focus + label {
+            outline: 5px solid teal;
+        }
+    </style>
+</head>
+<body>
+    <input type="file" accept="image/*" name="input" id="input" />
+    <label for="input" id="input">Upload</label>
+</body>
+</html>
